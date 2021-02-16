@@ -3,28 +3,28 @@
 #define TWOSIXTEEN uint64_t(pow(2, 16))
 #define TMPFILE "./02sbt9nd9UtctI2i.txt"
 
-typedef struct roundInfo {
+typedef struct rstruct {
     uint16_t r0;
     uint16_t r1;
     uint16_t r2;
     uint16_t r3;
     uint16_t roundNo;
-} roundInfo;
+} rstruct;
 
-typedef struct fInfo {
+typedef struct fstruct {
     uint16_t f0;
     uint16_t f1;
-} fInfo;
+} fstruct;
 
-const uint16_t GRADKEYSIZE = 80;
-const uint16_t GRADNUMROUNDS = 20;
-const uint16_t KEYSIZE = 64;
-const uint16_t NUMROUNDS = 16;
+// const uint16_t GRADKEYSIZE = 80;
+// const uint16_t GRADNUMROUNDS = 20;
+// const uint16_t KEYSIZE = 64;
+// const uint16_t NUMROUNDS = 16;
 
-const uint64_t WHITEN1 = uint64_t(65535);
-const uint64_t WHITEN2 = uint64_t(65535) << 16;
-const uint64_t WHITEN3 = uint64_t(65535) << 32;
-const uint64_t WHITEN4 = uint64_t(65535) << 48;
+const uint64_t BMASK64 = uint64_t(65535);
+const uint64_t BMASK16 = uint64_t(65535) << 16;
+const uint64_t BMASK32 = uint64_t(65535) << 32;
+const uint64_t BMASK48 = uint64_t(65535) << 48;
 
 const uint16_t HIGHFTABLEBITMASK = 240;
 const uint16_t LOWFTABLEBITMASK = 15;

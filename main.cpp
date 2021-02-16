@@ -16,7 +16,7 @@ using namespace std;
 // void generateSubKeys(bitset<80>*, uint16_t subkeys[][12], uint16_t decSubkeys[][12], int numRounds);
 // void encProcessAllBlocks(string readFilePath, string writeFilePath, bitset<80> key, uint16_t subkeyVals[][12]);
 uint64_t processBlock(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]) {
-    roundInfo rInfo = whitenInput(block, key);
+    rstruct rInfo = whitenInput(block, key);
     rInfo = encrypt(subkeyVals, rInfo);
     uint64_t intCipherText = (uint64_t(rInfo.r0) << 16) + uint64_t(rInfo.r1) + (uint64_t(rInfo.r2) << 48) + (uint64_t(rInfo.r3) << 32);
     return whitenOutput(intCipherText, key);
