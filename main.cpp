@@ -148,12 +148,34 @@ void decProcessAllBlocks(string readFilePath, string writeFilePath, bitset<64> k
     inputFile.close();
 }
 
+string readKeyFile(string keyPath){
+    ifstream keyfile;
+    string line;
+    string output;
+    
+    keyfile.open(keyPath, ios::in);
+
+    while (getline(keyfile, line))
+    {
+        istringstream iss(line);
+        iss >> output;
+    }
+
+    // cout << output << endl;
+    keyfile.close();
+
+    return output;
+
+}
+
 
 int main(int argc, char *argv[]) {
 
 	uint16_t subkeyVals[20][12];
 	uint16_t decSubkeyVals[20][12];
-	string keyStr = "0xabcdef0123456789abcd";
+
+    string keyStr = readKeyFile("key.txt");
+	
 	bitset<80> gradKey;
 	string subKey;
 	for (int i = 2; i < 18; i++) {
