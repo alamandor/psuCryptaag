@@ -1,34 +1,5 @@
 #include <stdlib.h>
 
-#define TWOSIXTEEN uint64_t(pow(2, 16))
-#define TMPFILE "./02sbt9nd9UtctI2i.txt"
-
-typedef struct rstruct {
-    uint16_t r0;
-    uint16_t r1;
-    uint16_t r2;
-    uint16_t r3;
-    uint16_t roundNo;
-} rstruct;
-
-typedef struct fstruct {
-    uint16_t f0;
-    uint16_t f1;
-} fstruct;
-
-// const uint16_t GRADKEYSIZE = 80;
-// const uint16_t GRADNUMROUNDS = 20;
-// const uint16_t KEYSIZE = 64;
-// const uint16_t NUMROUNDS = 16;
-
-const uint64_t BMASK64 = uint64_t(65535);
-const uint64_t BMASK16 = uint64_t(65535) << 16;
-const uint64_t BMASK32 = uint64_t(65535) << 32;
-const uint64_t BMASK48 = uint64_t(65535) << 48;
-
-const uint16_t HIGHFTABLEBITMASK = 240;
-const uint16_t LOWFTABLEBITMASK = 15;
-
 const uint8_t ftable[] = {
     0xa3,0xd7,0x09,0x83,0xf8,0x48,0xf6,0xf4,0xb3,0x21,0x15,0x78,0x99,0xb1,0xaf,0xf9,
     0xe7,0x2d,0x4d,0x8a,0xce,0x4c,0xca,0x2e,0x52,0x95,0xd9,0x1e,0x4e,0x38,0x44,0x28,
@@ -47,3 +18,16 @@ const uint8_t ftable[] = {
     0x08,0x77,0x11,0xbe,0x92,0x4f,0x24,0xc5,0x32,0x36,0x9d,0xcf,0xf3,0xa6,0xbb,0xac,
     0x5e,0x6c,0xa9,0x13,0x57,0x25,0xb5,0xe3,0xbd,0xa8,0x3a,0x01,0x05,0x59,0x2a,0x46
 };
+
+typedef struct rstruct {
+    uint16_t r0;
+    uint16_t r1;
+    uint16_t r2;
+    uint16_t r3;
+    uint16_t roundNo;
+} rstruct;
+
+typedef struct fstruct {
+    uint16_t f0;
+    uint16_t f1;
+} fstruct;

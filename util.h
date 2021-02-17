@@ -4,6 +4,12 @@
 
 using namespace std;
 
+string leftZeroPadHexBlock(string str, int size);
+string makePadding(int pad);
+void padInput(string readFilePath, string paddedPlainPath);
+uint64_t processBlock(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]);
+void shiftLeft(bitset<80> *curKey);
+uint16_t keyFunc(bitset<80> *curKey, uint16_t x);
 uint8_t FtableGet(uint8_t input);
 rstruct whitenInput(uint64_t block, bitset<64> key);
 uint64_t whitenOutput(uint64_t block, bitset<64> key);
