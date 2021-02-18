@@ -24,7 +24,7 @@ typedef struct rstruct {
     uint16_t r1;
     uint16_t r2;
     uint16_t r3;
-    uint16_t roundNo;
+    uint16_t rNum;
 } rstruct;
 
 typedef struct fstruct {

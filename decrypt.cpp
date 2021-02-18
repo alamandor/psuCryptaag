@@ -7,16 +7,16 @@
 #include <sstream>
 #include "util.h"
 
-string processDecText(string convToASCII) {
-    string ascii;
+string processDecText(string paddedHex) {
+    string byteToAscii;
     string byte;
     int trim;
-    for (int i = 0; i < convToASCII.size(); i += 2) {
-        byte = convToASCII.substr(i,2);
-        ascii += (char) stoull(byte, nullptr, 16);
+    for (int i = 0; i < paddedHex.size(); i += 2) {
+        byte = paddedHex.substr(i,2);
+        byteToAscii += (char) stoull(byte, nullptr, 16);
     }
-    trim = ascii[ascii.size()-1] - '0';
-    return ascii.erase(ascii.size() - trim);
+    trim = byteToAscii[byteToAscii.size()-1] - '0';
+    return byteToAscii.erase(byteToAscii.size() - trim);
 }
 
 void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
@@ -24,21 +24,21 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     string block;
     ifstream inputFile;
     fstream outputFile;
-    string convToASCII;
+    string paddedHex;
 
     inputFile.open(readFilePath, ios::in);
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
         if (block.size() == 16) {
-            uint64_t cipherBlock = processBlock(stoull(block, nullptr, 16), key, subkeyVals);  
-            stringstream w;
-            w << hex << cipherBlock;
-            convToASCII += leftZeroPadHexBlock(w.str(), 16);
+            uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, subkeyVals);  
+            stringstream rawBlockOutput;
+            rawBlockOutput << hex << cipherBlock;
+            paddedHex += leftPadding(rawBlockOutput.str(), 16);
             block.clear();
         }
     }
-    outputFile << processDecText(convToASCII);
+    outputFile << processDecText(paddedHex);
     outputFile.close();
     inputFile.close();
 }
