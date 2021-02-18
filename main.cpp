@@ -15,7 +15,7 @@ void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkey
     int k = numRounds - 1;
     for (int x = 0; x < numRounds; x++, k--) {
         for (int y = 0; y < 12; y++) {
-            subkeys[x][y] = keyFunc(key, (4*x) + (y % 4));
+            subkeys[x][y] = keyCalc(key, (4*x) + (y % 4));
             decSubkeys[k][y] = subkeys[x][y];
         }
     }

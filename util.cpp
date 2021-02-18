@@ -96,7 +96,7 @@ void shiftLeft(bitset<80> *curKey) {
     (*curKey) <<= 1;
     (*curKey)[0] = lastBit;
 }
-uint16_t keyFunc(bitset<80> *curKey, uint16_t x) {
+uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     uint16_t outputByte = x % 10;
     uint16_t keyIndex = outputByte * 8;
     bitset<8> outputSet = 0;
