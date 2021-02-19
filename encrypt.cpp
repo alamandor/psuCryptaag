@@ -8,7 +8,7 @@
 
 
 using namespace std;
-#define TMPFILE "./tempFile.txt"
+#define PADDINGFILE "./tempFile.txt"
 
 rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
     uint16_t tmp1, tmp2;
@@ -25,7 +25,7 @@ rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
         rInfo.r3 = tmp2;
         rInfo.rNum++;
 
-        // cout << "r0: " << rInfo.r0 << " r1: " << rInfo.r1 << " r2: " << rInfo.r2 << " r3: " << rInfo.r3 << " rNo: " << std::dec<< rInfo.rNum << endl; 
+        cout << "Block: 0x" << rInfo.r0 << rInfo.r1 << rInfo.r2 << rInfo.r3 << endl << "End of Round: "<< std::dec<< rInfo.rNum << endl; 
     }
     return rInfo;
 }
@@ -33,12 +33,15 @@ rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
 void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
     char curChar;
     string block;
+    // string line;
+    // string output; 
     uint64_t blockNum = 0;
     ofstream outputFile;
     ifstream inputFile;
+    ifstream outputPrepend;
     
-    padInput(readFilePath, TMPFILE);
-    inputFile.open(TMPFILE, ios::in);
+    padInput(readFilePath, PADDINGFILE);
+    inputFile.open(PADDINGFILE, ios::in);
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
@@ -55,5 +58,17 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     }
     inputFile.close();
     outputFile.close();
-    remove(TMPFILE);
+    // outputPrepend.open(writeFilePath, ios::in);
+
+    // while (getline(outputPrepend, line))
+    // {
+    //     istringstream iss(line);
+    //     iss >> output;
+    // }
+
+    // outputPrepend.close();
+    // outputFile.open(writeFilePath, ios::out | ofstream::trunc);
+    // outputFile << "0x" << output;
+    // outputFile.close();
+    remove(PADDINGFILE);
 }

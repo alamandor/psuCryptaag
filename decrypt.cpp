@@ -28,6 +28,7 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
 
     inputFile.open(readFilePath, ios::in);
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
+    cout << "DECRYPTION" <<endl << endl;
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
         if (block.size() == 16) {

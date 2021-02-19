@@ -15,3 +15,6 @@ Compile with:
 ## How to Run it
 Run the binary created, it will create a ciphertext version of the plaintext in output.txt. And then it will decrypt it with the reversed key schedule, Putting the decrypted text in a file named decoutput.txt.
 Padding is done in temporary files which are created and deleted by the program.
+
+## Unresolved Issues
+- Final round of ciphertext not the same as the test vector example. All ciphertext leading up to it is correct however. Not sure how to fix yet.
