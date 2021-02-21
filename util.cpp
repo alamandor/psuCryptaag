@@ -68,6 +68,8 @@ string makePadding(int pad) {
     return padding;
 }
 
+
+
 void padInput(string readFile, string outFile) {
     ifstream inputFile;
     ofstream outputFile;
@@ -84,6 +86,7 @@ void padInput(string readFile, string outFile) {
     outputFile.close();
 }
 
+// Main procdure for decrpytion and encryption, the only difference is what is passed as the subkeyVal argument
 uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]) {
     rstruct rData = whitenInput(block, key);
     rData = encrypt(subkeyVals, rData);
@@ -92,11 +95,14 @@ uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12
     return whitenOutput(intCipherText, key);
 }
 
+// Shift 80-bit key by 1 bit
 void shiftLeft(bitset<80> *curKey) {
     uint8_t lastBit = (*curKey)[80-1];
     (*curKey) <<= 1;
     (*curKey)[0] = lastBit;
 }
+
+// Routine to shift and calculate the subkeys
 uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     uint16_t outputByte = x % 10;
     uint16_t keyIndex = outputByte * 8;
@@ -108,6 +114,8 @@ uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     return uint16_t(outputSet.to_ulong());
 }
 
+
+// Retreive from Ftable
 uint8_t FtableGet(uint8_t input) {
     uint8_t col = input & FMASKLOWER;
     uint8_t row = (input & FMASKUPPER) >> 4;
@@ -117,6 +125,8 @@ uint8_t FtableGet(uint8_t input) {
 
 uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t start) {
     uint8_t g1, g2, g3, g4, g5, g6;
+
+    // Compute g1-g6
     g1 = uint8_t(w >> 8);
     g2 = uint8_t((w << 8) >> 8);
     g3 = FtableGet(g2 ^ subkeyVals[rNum][start]) ^ g1;

@@ -38,7 +38,7 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     uint64_t blockNum = 0;
     ofstream outputFile;
     ifstream inputFile;
-    ifstream outputPrepend;
+    // ifstream outputPrepend;
     
     padInput(readFilePath, PADDINGFILE);
     inputFile.open(PADDINGFILE, ios::in);

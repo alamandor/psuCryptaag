@@ -7,22 +7,20 @@
 #include <sstream>
 #include "util.h"
 
+// Extract the hex bytes from the input string and conver them to ascii, Also remove padding from the end of the text before returning
 string processDecText(string paddedHex) {
     string byteToAscii;
     string byte;
-    int i = 1;
-    // int trim;
+    int pad = 1;
     for (int i = 0; i < paddedHex.size(); i += 2) {
         byte = paddedHex.substr(i,2);
         byteToAscii += (char) stoull(byte, nullptr, 16);
     }
-    while (byteToAscii[byteToAscii.size()-i] == '0'){
-      i++;  
+    while (byteToAscii[byteToAscii.size()-pad] == '0'){
+      pad++;  
     }
     
-    // trim = byteToAscii[byteToAscii.size()-1] - '0';
-    // return byteToAscii.erase(byteToAscii.size() - trim);
-    return byteToAscii.erase(byteToAscii.size() - (i-1));
+    return byteToAscii.erase(byteToAscii.size() - (pad-1));
 }
 
 void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
