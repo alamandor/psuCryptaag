@@ -10,13 +10,19 @@
 string processDecText(string paddedHex) {
     string byteToAscii;
     string byte;
-    int trim;
+    int i = 1;
+    // int trim;
     for (int i = 0; i < paddedHex.size(); i += 2) {
         byte = paddedHex.substr(i,2);
         byteToAscii += (char) stoull(byte, nullptr, 16);
     }
-    trim = byteToAscii[byteToAscii.size()-1] - '0';
-    return byteToAscii.erase(byteToAscii.size() - trim);
+    while (byteToAscii[byteToAscii.size()-i] == '0'){
+      i++;  
+    }
+    
+    // trim = byteToAscii[byteToAscii.size()-1] - '0';
+    // return byteToAscii.erase(byteToAscii.size() - trim);
+    return byteToAscii.erase(byteToAscii.size() - (i-1));
 }
 
 void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
@@ -30,9 +36,10 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     cout << "DECRYPTION" <<endl << endl;
     // Discard the "0x" from the ciphertext file
-    inputFile.ignore(2);
-    while (inputFile >> noskipws >> curChar) {
-        block += curChar;
+    // inputFile.ignore(2);
+    while (inputFile) {
+        getline(inputFile, block);
+        // block += curChar;
         if (block.size() == 16) {
             uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, subkeyVals);  
             stringstream rawBlockOutput;

@@ -43,7 +43,7 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     padInput(readFilePath, PADDINGFILE);
     inputFile.open(PADDINGFILE, ios::in);
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
-    outputFile << "0x";
+    // outputFile << "0x";
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
         if (block.size() % 8 == 0) {
@@ -52,7 +52,7 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
             }
             stringstream rawBlockOutput;
             rawBlockOutput << hex << blockProcedure(blockNum, key, subkeyVals);
-            outputFile << leftPadding(rawBlockOutput.str(), 16);
+            outputFile << leftPadding(rawBlockOutput.str(), 16) << "\n";
             block.clear();
             blockNum = 0;
         }
@@ -71,5 +71,5 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     // outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     // outputFile << "0x" << output;
     // outputFile.close();
-    remove(PADDINGFILE);
+    // remove(PADDINGFILE);
 }

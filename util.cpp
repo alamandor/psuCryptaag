@@ -61,10 +61,10 @@ string leftPadding(string str, int size) {
 
 string makePadding(int pad) {
     string padding;
-    for (int i = 0; i < pad-1; i++) {
+    for (int i = 0; i < pad; i++) {
         padding += "0";
     }
-    padding += to_string(pad);
+    // padding += to_string(pad);
     return padding;
 }
 
