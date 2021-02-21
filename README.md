@@ -23,6 +23,6 @@ Padding is done in temporary files which are created and deleted by the program.
 
 ## Unresolved Issues
 - Final round of ciphertext not the same as the test vector example. All ciphertext leading up to it is correct however. Not sure how to fix yet.
-- ~~~Decrpytion bugs in procDecText function when I try to pad the beginning of encrpytion output with "0x" 
-    - Adjust loop to start at 2 bytes in? so it just ignores where the "0x" would be <--- NOPE
-    - Make decryptWrapper skip first two characters before the all to procDecText. <-- YES, use istream.ignore()~~~
+- ~~~Decrpytion bugs in procDecText function when I try to pad the beginning of encrpytion output with "0x"~~~ 
+    - ~~~Adjust loop to start at 2 bytes in? so it just ignores where the "0x" would be <--- NOPE~~~
+    - ~~~Make decryptWrapper skip first two characters before the all to procDecText. <-- YES, use istream.ignore()~~~
