@@ -135,8 +135,6 @@ uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t st
     g5 = FtableGet(g4 ^ subkeyVals[rNum][start + 2]) ^ g3;
     g6 = FtableGet(g5 ^ subkeyVals[rNum][start + 3]) ^ g4;
 
-    //  printf("g1 %x g2 %x g3 %x g4 %x g5 %x g6 %x\n", g1, g2, g3, g4, g5, g6);
-
     // Concatonate g5 and g6
     uint16_t left = g5;
     return ((left << 8) + g6);
@@ -144,8 +142,8 @@ uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t st
 
 fstruct fFunc(rstruct rData, uint16_t subkeyVals[][12]) {
    fstruct f;
-   // Compute t0 t1
 
+   // Compute t0 t1
    // First call to G()
    uint32_t t0 = gFunc(rData.r0, rData.rNum, subkeyVals, 0);
    // Second call to g()
@@ -154,9 +152,6 @@ fstruct fFunc(rstruct rData, uint16_t subkeyVals[][12]) {
    // Compute f0 f1
    f.f0 = (t0 + (2*t1) + ((subkeyVals[rData.rNum][8] << 8) + subkeyVals[rData.rNum][9])) % (uint64_t(pow(2, 16)));
    f.f1 = ((2*t0) + t1 + ((subkeyVals[rData.rNum][10] << 8) + subkeyVals[rData.rNum][11])) % (uint64_t(pow(2, 16)));
-
-//    cout << "t0: " << hex << t0 << " t1: " << hex << t1 << endl;
-//    cout << "f0: " << hex << f.f0 << " f1: " << hex << f.f1 << endl;
 
     // Output f1, f0
    return f;
