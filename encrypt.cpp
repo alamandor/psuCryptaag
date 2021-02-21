@@ -43,6 +43,7 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     padInput(readFilePath, PADDINGFILE);
     inputFile.open(PADDINGFILE, ios::in);
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
+    outputFile << "0x";
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
         if (block.size() % 8 == 0) {
