@@ -50,6 +50,7 @@ uint64_t whitenOutput(uint64_t block, bitset<64> key) {
     uint64_t c1 = ((block & BMASK32) >> 32) ^ (k2.to_ulong());
     uint64_t c0 = ((block & BMASK48) >> 48) ^ (k3.to_ulong());
     uint64_t ret = (c0 << 48) + (c1 << 32) + (c2 << 16) + c3;
+    cout << "Whitened Cipher Block: " << hex << ret << endl;
     return ret;
 }
 string leftPadding(string str, int size) {
@@ -134,7 +135,7 @@ uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t st
     g5 = FtableGet(g4 ^ subkeyVals[rNum][start + 2]) ^ g3;
     g6 = FtableGet(g5 ^ subkeyVals[rNum][start + 3]) ^ g4;
 
-     printf("g1 %x g2 %x g3 %x g4 %x g5 %x g6 %x\n", g1, g2, g3, g4, g5, g6);
+    //  printf("g1 %x g2 %x g3 %x g4 %x g5 %x g6 %x\n", g1, g2, g3, g4, g5, g6);
 
     // Concatonate g5 and g6
     uint16_t left = g5;
@@ -154,8 +155,8 @@ fstruct fFunc(rstruct rData, uint16_t subkeyVals[][12]) {
    f.f0 = (t0 + (2*t1) + ((subkeyVals[rData.rNum][8] << 8) + subkeyVals[rData.rNum][9])) % (uint64_t(pow(2, 16)));
    f.f1 = ((2*t0) + t1 + ((subkeyVals[rData.rNum][10] << 8) + subkeyVals[rData.rNum][11])) % (uint64_t(pow(2, 16)));
 
-   cout << "t0: " << hex << t0 << " t1: " << hex << t1 << endl;
-   cout << "f0: " << hex << f.f0 << " f1: " << hex << f.f1 << endl;
+//    cout << "t0: " << hex << t0 << " t1: " << hex << t1 << endl;
+//    cout << "f0: " << hex << f.f0 << " f1: " << hex << f.f1 << endl;
 
     // Output f1, f0
    return f;

@@ -25,7 +25,7 @@ rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
         rInfo.r3 = tmp2;
         rInfo.rNum++;
 
-        cout << "Block: 0x" << rInfo.r0 << rInfo.r1 << rInfo.r2 << rInfo.r3 << endl << "End of Round: "<< std::dec<< rInfo.rNum << endl; 
+        cout << "Block: 0x" << hex << rInfo.r0 << rInfo.r1 << rInfo.r2 << rInfo.r3 << endl << "End of Round: "<< std::dec<< rInfo.rNum << endl; 
     }
     return rInfo;
 }
