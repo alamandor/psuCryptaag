@@ -68,17 +68,31 @@ int main(int argc, char *argv[]) {
 
 	generateSubKeys(&gradKey, subkeyVals, decSubkeyVals, 20);
 
-	// for(int i = 0; i < 20; i++){
-	// 	for(int j = 0; j < 12; j++){
-	// 		cout << hex << subkeyVals[i][j];
-	// 	}
-	// 	cout << endl;
-	// }
+	cout << "KEY: " << keyStr << endl << endl;
+
+	cout << "ENCRYPTION SUBKEYS" << endl;
+	for(int i = 0; i < 20; i++){
+		for(int j = 0; j < 12; j++){
+			cout << "0x" << hex << subkeyVals[i][j] << " ";
+		}
+		cout << endl;
+	}
+	
+	cout << endl << "DECRYPTION SUBKEYS" << endl;
+	for(int i = 0; i < 20; i++){
+		for(int j = 0; j < 12; j++){
+			cout << "0x" << hex << decSubkeyVals[i][j] << " ";
+		}
+		cout << endl;
+	}
 
     bitset<64> key = (gradKey >>= 16).to_ullong();
 
+	cout << endl << "ENCRYPTION" << endl;
 	encryptWrapper("./plaintext.txt", "./output.txt", key, subkeyVals);
 
+
+    cout << endl<< "DECRYPTION"  << endl;
     decryptWrapper("./output.txt","./decoutput.txt",key, decSubkeyVals);
 
 

@@ -60,12 +60,12 @@ string leftPadding(string str, int size) {
     return str;
 }
 
-string makePadding(int pad) {
+// Pads with all 0's instead of 0's followed by amount of padding needed
+string makePadding(int padAmnt) {
     string padding;
-    for (int i = 0; i < pad; i++) {
+    for (int i = 0; i < padAmnt; i++) {
         padding += "0";
     }
-    // padding += to_string(pad);
     return padding;
 }
 
@@ -87,7 +87,7 @@ void padInput(string readFile, string outFile) {
     outputFile.close();
 }
 
-// Main procdure for decrpytion and encryption, the only difference is what is passed as the subkeyVal argument
+// Main procedure for decrpytion and encryption, the only difference is what is passed as the subkeyVal argument
 uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]) {
     rstruct rData = whitenInput(block, key);
     rData = encrypt(subkeyVals, rData);
@@ -165,8 +165,8 @@ fstruct fFunc(rstruct rData, uint16_t subkeyVals[][12]) {
 
 int getCharCnt(ifstream inputFile) {
     int count = 0;
-    char scratch;
-    while (inputFile >> noskipws >> scratch) {
+    char temp;
+    while (inputFile >> noskipws >> temp) {
         count++;
     }
     return count;
