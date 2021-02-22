@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "KEY: " << keyStr << endl << endl;
 
+	// Print Sub-keys used for encryption
 	cout << "ENCRYPTION SUBKEYS" << endl;
 	for(int i = 0; i < 20; i++){
 		for(int j = 0; j < 12; j++){
@@ -33,6 +34,7 @@ int main(int argc, char *argv[]) {
 		cout << endl;
 	}
 	
+	// Print Sub-keys used for decryption
 	cout << endl << "DECRYPTION SUBKEYS" << endl;
 	for(int i = 0; i < 20; i++){
 		for(int j = 0; j < 12; j++){
@@ -41,6 +43,7 @@ int main(int argc, char *argv[]) {
 		cout << endl;
 	}
 
+	// Use only 64-bits of original key for the cipher
     bitset<64> key = (keyGradSized >>= 16).to_ullong();
 
 	cout << endl << "ENCRYPTION" << endl;
