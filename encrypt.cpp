@@ -10,13 +10,13 @@
 using namespace std;
 #define PADDINGFILE "./tempFile.txt"
 
-rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
+rstruct encrypt(uint16_t subKeys[][12], rstruct rInfo) {
     uint16_t x, y;
     int roudNums = 20;
     fstruct fFuncReturn;
     rInfo.rNum = 0;
     for (int i = 0; i < roudNums; i++) {    
-        fFuncReturn = F(rInfo, subkeyVals);
+        fFuncReturn = F(rInfo, subKeys);
         x = rInfo.r0;
         y = rInfo.r1;
         rInfo.r0 = rInfo.r2 ^ fFuncReturn.f0;
@@ -30,7 +30,7 @@ rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
     return rInfo;
 }
 
-void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
+void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subKeys[][12]) {
     char curChar;
     string block;
     // string line;
@@ -51,7 +51,7 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
                 blockNum += uint64_t(block[i]) << ((7-i) * 8);
             }
             stringstream rawBlockOutput;
-            rawBlockOutput << hex << blockProcedure(blockNum, key, subkeyVals);
+            rawBlockOutput << hex << blockProcedure(blockNum, key, subKeys);
             outputFile << leftPadding(rawBlockOutput.str(), 16) << "\n";
             block.clear();
             blockNum = 0;
@@ -71,5 +71,4 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     // outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     // outputFile << "0x" << output;
     // outputFile.close();
-    // remove(PADDINGFILE);
 }

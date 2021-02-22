@@ -16,6 +16,27 @@ const uint64_t BMASK48 = uint64_t(65535) << 48;
 const uint16_t FMASKUPPER = 240;
 const uint16_t FMASKLOWER = 15;
 
+bitset<80> constructGradSizedKey(string keyStr) {
+	bitset<80> keyGradSized;
+	string subKey;
+	for (int i = 2; i < 18; i++) {
+		subKey += keyStr[i];
+	}
+	bitset<64> preKey = stoull(subKey, nullptr, 16);
+	keyGradSized = preKey.to_ullong();
+	keyGradSized <<= 16;
+	subKey.clear();
+	for (int i = 18; i < 22; i++) {
+		subKey += keyStr[i];
+	}
+	preKey = stoull(subKey, nullptr, 16);
+	for (int i = 0; i < 16; i++) {
+		keyGradSized[i] = preKey[i];
+	}
+
+    return keyGradSized;
+}
+
 // Shift 80-bit key by 1 bit
 void shiftLeft(bitset<80> *curKey) {
     uint8_t lastBit = (*curKey)[80-1];
@@ -23,7 +44,7 @@ void shiftLeft(bitset<80> *curKey) {
     (*curKey)[0] = lastBit;
 }
 
-// Routine to shift and calculate the subkeys
+// Routine to shift and calculate the encKeys
 uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     uint16_t outputByte = x % 10;
     uint16_t keyIndex = outputByte * 8;
@@ -34,12 +55,13 @@ uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     }
     return uint16_t(outputSet.to_ulong());
 }
-void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkeys[][12], int numRounds) {
+void generateSubKeys(bitset<80> *key, uint16_t encKeys[][12], uint16_t decKeys[][12]) {
+    int numRounds = 20;
     int k = numRounds - 1;
     for (int x = 0; x < numRounds; x++, k--) {
         for (int y = 0; y < 12; y++) {
-            subkeys[x][y] = keyCalc(key, (4*x) + (y % 4));
-            decSubkeys[k][y] = subkeys[x][y];
+            encKeys[x][y] = keyCalc(key, (4*x) + (y % 4));
+            decKeys[k][y] = encKeys[x][y];
         }
     }
 }
@@ -102,8 +124,8 @@ uint64_t whiteOut(uint64_t block, bitset<64> key) {
     cout << "Whitened Cipher Block: " << hex << ret << endl;
     return ret;
 }
-string leftPadding(string str, int size) {
-    while (str.size() != size) {
+string leftPadding(string str, int s) {
+    while (str.size() != s) {
         str = "0" + str;
     }
     return str;

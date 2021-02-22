@@ -4,7 +4,8 @@
 
 using namespace std;
 
-void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkeys[][12], int numRounds);
+bitset<80> constructGradSizedKey(string keyStr);
+void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkeys[][12]);
 string readKeyFile(string keyPath);
 string leftPadding(string str, int size);
 string makePadding(int pad);

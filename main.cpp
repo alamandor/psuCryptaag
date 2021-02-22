@@ -12,39 +12,23 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-	uint16_t subkeyVals[20][12];
-	uint16_t decSubkeyVals[20][12];
+	uint16_t encKeys[20][12];
+	uint16_t decKeys[20][12];
 
     string keyStr = readKeyFile("key.txt");
 	
 	// Constructing the 80-bit key into an in-memory variable
-	bitset<80> keyGradSized;
-	string subKey;
-	for (int i = 2; i < 18; i++) {
-		subKey += keyStr[i];
-	}
-	bitset<64> preKey = stoull(subKey, nullptr, 16);
-	keyGradSized = preKey.to_ullong();
-	keyGradSized <<= 16;
-	subKey.clear();
-	for (int i = 18; i < 22; i++) {
-		subKey += keyStr[i];
-	}
-	preKey = stoull(subKey, nullptr, 16);
-	for (int i = 0; i < 16; i++) {
-		keyGradSized[i] = preKey[i];
-	}
-	// Done consructing key
+	bitset<80> keyGradSized = constructGradSizedKey(keyStr);
 
 	// Pass key to routine to create subkeys beforehand
-	generateSubKeys(&keyGradSized, subkeyVals, decSubkeyVals, 20);
+	generateSubKeys(&keyGradSized, encKeys, decKeys);
 
 	cout << "KEY: " << keyStr << endl << endl;
 
 	cout << "ENCRYPTION SUBKEYS" << endl;
 	for(int i = 0; i < 20; i++){
 		for(int j = 0; j < 12; j++){
-			cout << "0x" << hex << subkeyVals[i][j] << " ";
+			cout << "0x" << hex << encKeys[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -52,7 +36,7 @@ int main(int argc, char *argv[]) {
 	cout << endl << "DECRYPTION SUBKEYS" << endl;
 	for(int i = 0; i < 20; i++){
 		for(int j = 0; j < 12; j++){
-			cout << "0x" << hex << decSubkeyVals[i][j] << " ";
+			cout << "0x" << hex << decKeys[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -60,11 +44,11 @@ int main(int argc, char *argv[]) {
     bitset<64> key = (keyGradSized >>= 16).to_ullong();
 
 	cout << endl << "ENCRYPTION" << endl;
-	encryptWrapper("./plaintext.txt", "./output.txt", key, subkeyVals);
+	encryptWrapper("./plaintext.txt", "./output.txt", key, encKeys);
 
 
     cout << endl<< "DECRYPTION"  << endl;
-    decryptWrapper("./output.txt","./decoutput.txt",key, decSubkeyVals);
+    decryptWrapper("./output.txt","./decoutput.txt",key, decKeys);
 
 
 	exit(0);

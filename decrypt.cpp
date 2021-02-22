@@ -23,7 +23,7 @@ string processDecText(string paddedHex) {
     return ascii.erase(ascii.size() - (pad-1));
 }
 
-void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
+void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t decKeys[][12]) {
     char curChar;
     string block;
     ifstream inputFile;
@@ -38,7 +38,7 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
         getline(inputFile, block);
         // block += curChar;
         if (block.size() == 16) {
-            uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, subkeyVals);  
+            uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, decKeys);  
             stringstream rawBlockOutput;
             rawBlockOutput << hex << cipherBlock;
             paddedHex += leftPadding(rawBlockOutput.str(), 16);
