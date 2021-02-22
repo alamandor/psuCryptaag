@@ -23,6 +23,7 @@ string processDecText(string paddedHex) {
     return ascii.erase(ascii.size() - (pad-1));
 }
 
+// Loop to call the cipher with decrpytion keys instead. Pads the hex output and returns it.
 string decryptionLoop(ifstream& inputFile, bitset<64> key, uint16_t dKeys[][12]){
     string block;
     char curChar;
@@ -40,6 +41,7 @@ string decryptionLoop(ifstream& inputFile, bitset<64> key, uint16_t dKeys[][12])
     return paddedHex;
 }
 
+// Wrapper for the decrpytion loop to handle the file handlers and cleanup of them. Also cleans up the padding so the final output looks just like the original plaintext
 void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t decKeys[][12]) {
     ifstream inputFile;
     fstream outputFile;

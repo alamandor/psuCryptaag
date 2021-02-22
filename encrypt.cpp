@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// Function calculate the r0-r3 values for 20 rounds, calling F() once per round. called after whitening the input
 rstruct encrypt(uint16_t subKeys[][12], rstruct rInfo) {
     uint16_t x, y;
     int roudNums = 20;
@@ -29,6 +30,7 @@ rstruct encrypt(uint16_t subKeys[][12], rstruct rInfo) {
     return rInfo;
 }
 
+// Contains loop to call the full cipher procedure on all the data in the plaintext file, also calls the padding function to be applied to the Hex ouput of the cipher routine.
 void encryptionLoop(bitset<64> key, uint16_t subKeys[][12], ofstream& outputFile, ifstream& inputFile){
     string block;
     char curChar;
@@ -49,6 +51,7 @@ void encryptionLoop(bitset<64> key, uint16_t subKeys[][12], ofstream& outputFile
 
 }
 
+// Wrapper for the encrytpyion loop to open the file handlers. Then clean them up when the cipher is completely done.
 void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subKeys[][12]) {
     ofstream outputFile;
     ifstream inputFile;

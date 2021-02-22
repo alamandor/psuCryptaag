@@ -16,6 +16,7 @@ const uint64_t BMASK48 = uint64_t(65535) << 48;
 const uint16_t FMASKUPPER = 240;
 const uint16_t FMASKLOWER = 15;
 
+// Creates an 80-bit keys from the data read in from the keyfile.txt, returns a in-memory variable version of the 80-bit keys to be used later by the program
 bitset<80> constructGradSizedKey(string keyStr) {
 	bitset<80> keyGradSized;
 	string subKey;
@@ -55,6 +56,8 @@ uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
     }
     return uint16_t(outputSet.to_ulong());
 }
+
+// Function to calculate the encryption and decrpytion key schedules for later to avoid neededing to caclulate them on the fly during the cipher routine.
 void generateSubKeys(bitset<80> *key, uint16_t encKeys[][12], uint16_t decKeys[][12]) {
     int numRounds = 20;
     int k = numRounds - 1;
@@ -66,6 +69,7 @@ void generateSubKeys(bitset<80> *key, uint16_t encKeys[][12], uint16_t decKeys[]
     }
 }
 
+// Reads the keysfile and returns a string variable version of it. the "0x" is stripped off later by contructGradsizedKey() function.
 string readKeyFile(string keyPath){
     ifstream keyfile;
     string line;
@@ -86,6 +90,7 @@ string readKeyFile(string keyPath){
 
 }
 
+// Function to whiten the input according to the spec provided
 rstruct whiteIn(uint64_t block, bitset<64> key) {
     rstruct rData;
     bitset<16> k0, k1, k2, k3;
@@ -105,6 +110,7 @@ rstruct whiteIn(uint64_t block, bitset<64> key) {
     return rData;
 }
 
+// Function to whiten the output according to the spec provided
 uint64_t whiteOut(uint64_t block, bitset<64> key) {
     bitset<16> k0, k1, k2, k3;
     uint8_t k1Index = 16;
@@ -215,13 +221,3 @@ fstruct F(rstruct rData, uint16_t sKeys[][12]) {
     // Output f1, f0
    return f;
 }
-
-
-// int CharCount(string inputFile) {
-//     int count = 0;
-//     char temp;
-//     while (inputFile >> noskipws >> temp) {
-//         count++;
-//     }
-//     return count;
-// }
