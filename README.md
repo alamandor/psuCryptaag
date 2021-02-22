@@ -4,7 +4,9 @@
 
 ## How to build it
 Compile with:
-``` g++ main.cpp decrypt.cpp util.cpp encrypt.cpp ```
+- ``` g++ main.cpp decrypt.cpp util.cpp encrypt.cpp ```
+OR
+- ```g++ *.cpp```
 
 ## Required local files
 1. key.txt
