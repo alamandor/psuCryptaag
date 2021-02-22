@@ -159,7 +159,7 @@ fstruct F(rstruct rData, uint16_t subkeyVals[][12]) {
 }
 
 
-int getCharCnt(ifstream inputFile) {
+int CharCount(ifstream inputFile) {
     int count = 0;
     char temp;
     while (inputFile >> noskipws >> temp) {
