@@ -8,7 +8,6 @@
 
 
 using namespace std;
-#define PADDINGFILE "./tempFile.txt"
 
 rstruct encrypt(uint16_t subKeys[][12], rstruct rInfo) {
     uint16_t x, y;
@@ -30,20 +29,10 @@ rstruct encrypt(uint16_t subKeys[][12], rstruct rInfo) {
     return rInfo;
 }
 
-void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subKeys[][12]) {
-    char curChar;
+void encryptionLoop(bitset<64> key, uint16_t subKeys[][12], ofstream& outputFile, ifstream& inputFile){
     string block;
-    // string line;
-    // string output; 
+    char curChar;
     uint64_t blockNum = 0;
-    ofstream outputFile;
-    ifstream inputFile;
-    // ifstream outputPrepend;
-    
-    padInput(readFilePath, PADDINGFILE);
-    inputFile.open(PADDINGFILE, ios::in);
-    outputFile.open(writeFilePath, ios::out | ofstream::trunc);
-    // outputFile << "0x";
     while (inputFile >> noskipws >> curChar) {
         block += curChar;
         if (block.size() % 8 == 0) {
@@ -57,18 +46,19 @@ void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
             blockNum = 0;
         }
     }
+
+}
+
+void encryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subKeys[][12]) {
+    ofstream outputFile;
+    ifstream inputFile;
+    
+    padInput(readFilePath, "./padFile.txt");
+    inputFile.open("./padFile.txt", ios::in);
+    outputFile.open(writeFilePath, ios::out | ofstream::trunc);
+    // outputFile << "0x";
+    encryptionLoop(key, subKeys, outputFile, inputFile);
+
     inputFile.close();
     outputFile.close();
-    // outputPrepend.open(writeFilePath, ios::in);
-
-    // while (getline(outputPrepend, line))
-    // {
-    //     istringstream iss(line);
-    //     iss >> output;
-    // }
-
-    // outputPrepend.close();
-    // outputFile.open(writeFilePath, ios::out | ofstream::trunc);
-    // outputFile << "0x" << output;
-    // outputFile.close();
 }

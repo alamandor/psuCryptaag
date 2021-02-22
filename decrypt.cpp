@@ -23,9 +23,24 @@ string processDecText(string paddedHex) {
     return ascii.erase(ascii.size() - (pad-1));
 }
 
-void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t decKeys[][12]) {
-    char curChar;
+string decryptionLoop(ifstream& inputFile, bitset<64> key, uint16_t dKeys[][12]){
     string block;
+    char curChar;
+    string paddedHex;
+    while (inputFile) {
+        getline(inputFile, block);
+        if (block.size() > 0) {
+            uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, dKeys);  
+            stringstream rawBlockOutput;
+            rawBlockOutput << hex << cipherBlock;
+            paddedHex += leftPadding(rawBlockOutput.str(), 16);
+            block.clear();
+        }
+    }
+    return paddedHex;
+}
+
+void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t decKeys[][12]) {
     ifstream inputFile;
     fstream outputFile;
     string paddedHex;
@@ -34,16 +49,7 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     outputFile.open(writeFilePath, ios::out | ofstream::trunc);
     // Discard the "0x" from the ciphertext file
     // inputFile.ignore(2);
-    while (inputFile) {
-        getline(inputFile, block);
-        if (block.size() > 0) {
-            uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, decKeys);  
-            stringstream rawBlockOutput;
-            rawBlockOutput << hex << cipherBlock;
-            paddedHex += leftPadding(rawBlockOutput.str(), 16);
-            block.clear();
-        }
-    }
+    paddedHex = decryptionLoop(inputFile, key, decKeys);
     outputFile << processDecText(paddedHex);
     outputFile.close();
     inputFile.close();

@@ -124,6 +124,8 @@ uint64_t whiteOut(uint64_t block, bitset<64> key) {
     cout << "Whitened Cipher Block: " << hex << ret << endl;
     return ret;
 }
+
+// Add left padding to raw output from the blockProcedure output
 string leftPadding(string str, int s) {
     while (str.size() != s) {
         str = "0" + str;
@@ -141,27 +143,28 @@ string makePadding(int padAmnt) {
 }
 
 
-
+// Calculate and create a new file that has the appropriate padding added.
+// MadePadding() adds the actual padding, this is more a wrapper to figure out how much padding is needed
 void padInput(string readFile, string outFile) {
     ifstream inputFile;
     ofstream outputFile;
     inputFile.open(readFile, ios::in);
     outputFile.open(outFile, ios::out | ofstream::trunc);
-    int count = 0;
+    int c = 0;
     char curChar;
     while (inputFile >> noskipws >> curChar) {
-        count++;
+        c++;
         outputFile << curChar;
     }
-    outputFile << makePadding(8 - (count % 8));
+    outputFile << makePadding(8 - (c % 8));
     inputFile.close();
     outputFile.close();
 }
 
 // Main procedure for decrpytion and encryption, the only difference is what is passed as the subkeyVal argument
-uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]) {
+uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t sKeys[][12]) {
     rstruct rData = whiteIn(block, key);
-    rData = encrypt(subkeyVals, rData);
+    rData = encrypt(sKeys, rData);
     uint64_t intCipherText = (uint64_t(rData.r0) << 16) + uint64_t(rData.r1) + (uint64_t(rData.r2) << 48) + (uint64_t(rData.r3) << 32);
     // cout << "intCIpherText" << hex << intCipherText << endl;
     return whiteOut(intCipherText, key);
@@ -170,53 +173,55 @@ uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12
 
 
 // Retreive from Ftable
-uint8_t FtableGet(uint8_t input) {
+uint8_t FTableConversion(uint8_t input) {
     uint8_t col = input & FMASKLOWER;
     uint8_t row = (input & FMASKUPPER) >> 4;
     return ftable[(row*16)+col];
 }
 
 
-uint16_t G(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t start) {
+// G() function from spec
+uint16_t G(uint16_t w, uint16_t rNum, uint16_t sKeys[][12], uint16_t start) {
     uint8_t g1, g2, g3, g4, g5, g6;
 
     // Compute g1-g6
     g1 = uint8_t(w >> 8);
     g2 = uint8_t((w << 8) >> 8);
-    g3 = FtableGet(g2 ^ subkeyVals[rNum][start]) ^ g1;
-    g4 = FtableGet(g3 ^ subkeyVals[rNum][start + 1]) ^ g2;
-    g5 = FtableGet(g4 ^ subkeyVals[rNum][start + 2]) ^ g3;
-    g6 = FtableGet(g5 ^ subkeyVals[rNum][start + 3]) ^ g4;
+    g3 = FTableConversion(g2 ^ sKeys[rNum][start]) ^ g1;
+    g4 = FTableConversion(g3 ^ sKeys[rNum][start + 1]) ^ g2;
+    g5 = FTableConversion(g4 ^ sKeys[rNum][start + 2]) ^ g3;
+    g6 = FTableConversion(g5 ^ sKeys[rNum][start + 3]) ^ g4;
 
     // Concatonate g5 and g6
     uint16_t left = g5;
     return ((left << 8) + g6);
 }
 
-fstruct F(rstruct rData, uint16_t subkeyVals[][12]) {
+// F() function from spec
+fstruct F(rstruct rData, uint16_t sKeys[][12]) {
    fstruct f;
    int x = 0;
 
    // Compute t0 t1
    // First call to G()
-   uint32_t t0 = G(rData.r0, rData.rNum, subkeyVals, x);
+   uint32_t t0 = G(rData.r0, rData.rNum, sKeys, x);
    // Second call to g()
-   uint32_t t1 = G(rData.r1, rData.rNum, subkeyVals, x+4);
+   uint32_t t1 = G(rData.r1, rData.rNum, sKeys, x+4);
 
    // Compute f0 f1
-   f.f0 = (t0 + (2*t1) + ((subkeyVals[rData.rNum][8] << 8) + subkeyVals[rData.rNum][9])) % (uint64_t(pow(2, 16)));
-   f.f1 = ((2*t0) + t1 + ((subkeyVals[rData.rNum][10] << 8) + subkeyVals[rData.rNum][11])) % (uint64_t(pow(2, 16)));
+   f.f0 = (t0 + (2*t1) + ((sKeys[rData.rNum][8] << 8) + sKeys[rData.rNum][9])) % (uint64_t(pow(2, 16)));
+   f.f1 = ((2*t0) + t1 + ((sKeys[rData.rNum][10] << 8) + sKeys[rData.rNum][11])) % (uint64_t(pow(2, 16)));
 
     // Output f1, f0
    return f;
 }
 
 
-int CharCount(ifstream inputFile) {
-    int count = 0;
-    char temp;
-    while (inputFile >> noskipws >> temp) {
-        count++;
-    }
-    return count;
-}
+// int CharCount(string inputFile) {
+//     int count = 0;
+//     char temp;
+//     while (inputFile >> noskipws >> temp) {
+//         count++;
+//     }
+//     return count;
+// }
