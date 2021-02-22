@@ -15,17 +15,17 @@ const uint64_t BMASK48 = uint64_t(65535) << 48;
 const uint16_t FMASKUPPER = 240;
 const uint16_t FMASKLOWER = 15;
 
-rstruct whitenInput(uint64_t block, bitset<64> key) {
+rstruct whiteIn(uint64_t block, bitset<64> key) {
     rstruct rData;
     bitset<16> k0, k1, k2, k3;
-    uint8_t j = 16;
-    uint8_t k = 32;
-    uint8_t l = 48;
-    for (int i = 0; i < 16; i++, j++, k++, l++) {
+    uint8_t k1Index = 16;
+    uint8_t k2Index = 32;
+    uint8_t k3Index = 48;
+    for (int i = 0; i < 16; i++, k1Index++, k2Index++, k3Index++) {
         k0[i] = key[i];
-        k1[i] = key[j];
-        k2[i] = key[k];
-        k3[i] = key[l];
+        k1[i] = key[k1Index];
+        k2[i] = key[k2Index];
+        k3[i] = key[k3Index];
     }
     rData.r3 = (block & BMASK64) ^ (k0.to_ulong());
     rData.r2 = ((block & BMASK16) >> 16) ^ (k1.to_ulong());
@@ -34,16 +34,16 @@ rstruct whitenInput(uint64_t block, bitset<64> key) {
     return rData;
 }
 
-uint64_t whitenOutput(uint64_t block, bitset<64> key) {
+uint64_t whiteOut(uint64_t block, bitset<64> key) {
     bitset<16> k0, k1, k2, k3;
-    uint8_t j = 16;
-    uint8_t k = 32;
-    uint8_t l = 48;
-    for (int i = 0; i < 16; i++, j++, k++, l++) {
+    uint8_t k1Index = 16;
+    uint8_t k2Index = 32;
+    uint8_t k3Index = 48;
+    for (int i = 0; i < 16; i++, k1Index++, k2Index++, k3Index++) {
         k0[i] = key[i];
-        k1[i] = key[j];
-        k2[i] = key[k];
-        k3[i] = key[l];    
+        k1[i] = key[k1Index];
+        k2[i] = key[k2Index];
+        k3[i] = key[k3Index];    
     }
     uint64_t c3 = (block & BMASK64) ^ (k0.to_ulong());
     uint64_t c2 = ((block & BMASK16) >> 16) ^ (k1.to_ulong());
@@ -89,11 +89,11 @@ void padInput(string readFile, string outFile) {
 
 // Main procedure for decrpytion and encryption, the only difference is what is passed as the subkeyVal argument
 uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12]) {
-    rstruct rData = whitenInput(block, key);
+    rstruct rData = whiteIn(block, key);
     rData = encrypt(subkeyVals, rData);
     uint64_t intCipherText = (uint64_t(rData.r0) << 16) + uint64_t(rData.r1) + (uint64_t(rData.r2) << 48) + (uint64_t(rData.r3) << 32);
     // cout << "intCIpherText" << hex << intCipherText << endl;
-    return whitenOutput(intCipherText, key);
+    return whiteOut(intCipherText, key);
 }
 
 // Shift 80-bit key by 1 bit
@@ -124,7 +124,7 @@ uint8_t FtableGet(uint8_t input) {
 }
 
 
-uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t start) {
+uint16_t G(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t start) {
     uint8_t g1, g2, g3, g4, g5, g6;
 
     // Compute g1-g6
@@ -140,14 +140,15 @@ uint16_t gFunc(uint16_t w, uint16_t rNum, uint16_t subkeyVals[][12], uint16_t st
     return ((left << 8) + g6);
 }
 
-fstruct fFunc(rstruct rData, uint16_t subkeyVals[][12]) {
+fstruct F(rstruct rData, uint16_t subkeyVals[][12]) {
    fstruct f;
+   int x = 0;
 
    // Compute t0 t1
    // First call to G()
-   uint32_t t0 = gFunc(rData.r0, rData.rNum, subkeyVals, 0);
+   uint32_t t0 = G(rData.r0, rData.rNum, subkeyVals, x);
    // Second call to g()
-   uint32_t t1 = gFunc(rData.r1, rData.rNum, subkeyVals, 4);
+   uint32_t t1 = G(rData.r1, rData.rNum, subkeyVals, x+4);
 
    // Compute f0 f1
    f.f0 = (t0 + (2*t1) + ((subkeyVals[rData.rNum][8] << 8) + subkeyVals[rData.rNum][9])) % (uint64_t(pow(2, 16)));

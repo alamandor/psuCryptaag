@@ -16,7 +16,7 @@ rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
     fstruct fFuncReturn;
     rInfo.rNum = 0;
     for (int i = 0; i < roudNums; i++) {    
-        fFuncReturn = fFunc(rInfo, subkeyVals);
+        fFuncReturn = F(rInfo, subkeyVals);
         tmp1 = rInfo.r0;
         tmp2 = rInfo.r1;
         rInfo.r0 = rInfo.r2 ^ fFuncReturn.f0;

@@ -9,18 +9,18 @@
 
 // Extract the hex bytes from the input string and conver them to ascii, Also remove padding from the end of the text before returning
 string processDecText(string paddedHex) {
-    string byteToAscii;
+    string ascii;
     string byte;
     int pad = 1;
     for (int i = 0; i < paddedHex.size(); i += 2) {
         byte = paddedHex.substr(i,2);
-        byteToAscii += (char) stoull(byte, nullptr, 16);
+        ascii += (char) stoull(byte, nullptr, 16);
     }
-    while (byteToAscii[byteToAscii.size()-pad] == '0'){
+    while (ascii[ascii.size()-pad] == '0'){
       pad++;  
     }
     
-    return byteToAscii.erase(byteToAscii.size() - (pad-1));
+    return ascii.erase(ascii.size() - (pad-1));
 }
 
 void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, uint16_t subkeyVals[][12]) {
