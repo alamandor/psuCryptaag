@@ -36,8 +36,7 @@ void decryptWrapper(string readFilePath, string writeFilePath, bitset<64> key, u
     // inputFile.ignore(2);
     while (inputFile) {
         getline(inputFile, block);
-        // block += curChar;
-        if (block.size() == 16) {
+        if (block.size() > 0) {
             uint64_t cipherBlock = blockProcedure(stoull(block, nullptr, 16), key, decKeys);  
             stringstream rawBlockOutput;
             rawBlockOutput << hex << cipherBlock;
