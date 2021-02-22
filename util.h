@@ -4,6 +4,8 @@
 
 using namespace std;
 
+void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkeys[][12], int numRounds);
+string readKeyFile(string keyPath);
 string leftPadding(string str, int size);
 string makePadding(int pad);
 void padInput(string readFilePath, string paddedPlainPath);

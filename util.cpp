@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
+#include <sstream>
 #include <math.h>
 #include "data.h"
 #include "encrypt.h"
@@ -14,6 +15,54 @@ const uint64_t BMASK32 = uint64_t(65535) << 32;
 const uint64_t BMASK48 = uint64_t(65535) << 48;
 const uint16_t FMASKUPPER = 240;
 const uint16_t FMASKLOWER = 15;
+
+// Shift 80-bit key by 1 bit
+void shiftLeft(bitset<80> *curKey) {
+    uint8_t lastBit = (*curKey)[80-1];
+    (*curKey) <<= 1;
+    (*curKey)[0] = lastBit;
+}
+
+// Routine to shift and calculate the subkeys
+uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
+    uint16_t outputByte = x % 10;
+    uint16_t keyIndex = outputByte * 8;
+    bitset<8> outputSet = 0;
+    shiftLeft(curKey);
+    for (int i=0; i <= 7; i++) {
+        outputSet[i] = (*curKey)[keyIndex++];
+    }
+    return uint16_t(outputSet.to_ulong());
+}
+void generateSubKeys(bitset<80> *key, uint16_t subkeys[][12], uint16_t decSubkeys[][12], int numRounds) {
+    int k = numRounds - 1;
+    for (int x = 0; x < numRounds; x++, k--) {
+        for (int y = 0; y < 12; y++) {
+            subkeys[x][y] = keyCalc(key, (4*x) + (y % 4));
+            decSubkeys[k][y] = subkeys[x][y];
+        }
+    }
+}
+
+string readKeyFile(string keyPath){
+    ifstream keyfile;
+    string line;
+    string output;
+    
+    keyfile.open(keyPath, ios::in);
+
+    while (getline(keyfile, line))
+    {
+        istringstream iss(line);
+        iss >> output;
+    }
+
+    // cout << output << endl;
+    keyfile.close();
+
+    return output;
+
+}
 
 rstruct whiteIn(uint64_t block, bitset<64> key) {
     rstruct rData;
@@ -96,24 +145,6 @@ uint64_t blockProcedure(uint64_t block, bitset<64> key, uint16_t subkeyVals[][12
     return whiteOut(intCipherText, key);
 }
 
-// Shift 80-bit key by 1 bit
-void shiftLeft(bitset<80> *curKey) {
-    uint8_t lastBit = (*curKey)[80-1];
-    (*curKey) <<= 1;
-    (*curKey)[0] = lastBit;
-}
-
-// Routine to shift and calculate the subkeys
-uint16_t keyCalc(bitset<80> *curKey, uint16_t x) {
-    uint16_t outputByte = x % 10;
-    uint16_t keyIndex = outputByte * 8;
-    bitset<8> outputSet = 0;
-    shiftLeft(curKey);
-    for (int i=0; i <= 7; i++) {
-        outputSet[i] = (*curKey)[keyIndex++];
-    }
-    return uint16_t(outputSet.to_ulong());
-}
 
 
 // Retreive from Ftable
