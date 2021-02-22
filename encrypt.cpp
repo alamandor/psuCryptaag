@@ -11,18 +11,18 @@ using namespace std;
 #define PADDINGFILE "./tempFile.txt"
 
 rstruct encrypt(uint16_t subkeyVals[][12], rstruct rInfo) {
-    uint16_t tmp1, tmp2;
+    uint16_t x, y;
     int roudNums = 20;
     fstruct fFuncReturn;
     rInfo.rNum = 0;
     for (int i = 0; i < roudNums; i++) {    
         fFuncReturn = F(rInfo, subkeyVals);
-        tmp1 = rInfo.r0;
-        tmp2 = rInfo.r1;
+        x = rInfo.r0;
+        y = rInfo.r1;
         rInfo.r0 = rInfo.r2 ^ fFuncReturn.f0;
         rInfo.r1 = rInfo.r3 ^ fFuncReturn.f1;
-        rInfo.r2 = tmp1;
-        rInfo.r3 = tmp2;
+        rInfo.r2 = x;
+        rInfo.r3 = y;
         rInfo.rNum++;
 
         cout << "Block: 0x" << hex << rInfo.r0 << rInfo.r1 << rInfo.r2 << rInfo.r3 << endl << "End of Round: "<< std::dec<< rInfo.rNum << endl; 
