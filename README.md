@@ -1,6 +1,10 @@
-# Cryptography Project 1
+# Cryptography Project - Cryptography Algorithm Implementation
 - Alec Greenaway
 - aag3@pdx.edu
+
+# What is it?
+
+This is a custom implementation of a cryptography algorithm based on the Blowfish and AES algorithms.
 
 ## How to build it
 Compile with:
