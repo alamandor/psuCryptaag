@@ -1,6 +1,4 @@
 # Cryptography Project - Cryptography Algorithm Implementation
-- Alec Greenaway
-- aag3@pdx.edu
 
 # What is it?
 
