@@ -2,7 +2,7 @@
 
 # What is it?
 
-This is a custom implementation of a cryptography algorithm based on the Blowfish and AES algorithms.
+This is a custom implementation of a cryptography algorithm based on the Twofish and SKIPJACK
 
 ## How to build it
 Compile with:
